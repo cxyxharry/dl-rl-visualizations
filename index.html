@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>深度学习/强化学习可视化</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- KaTeX -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@latest/dist/contrib/auto-render.min.js"></script>
+
+    <!-- D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <!-- 侧边导航栏 -->
+    <nav id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h1>DL/RL 可视化</h1>
+            <button id="sidebar-toggle" class="sidebar-toggle" aria-label="折叠导航">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 12h18M3 6h18M3 18h18"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="sidebar-content">
+            <div class="nav-section">
+                <h3>Transformer 系列</h3>
+                <ul>
+                    <li><a href="#attention" data-module="attention">Self-Attention</a></li>
+                    <li><a href="#multi-head-attention" data-module="multi-head-attention">Multi-Head Attention</a></li>
+                    <li><a href="#positional-encoding" data-module="positional-encoding">Positional Encoding</a></li>
+                    <li><a href="#ffn" data-module="ffn">Feed-Forward Network</a></li>
+                    <li><a href="#layer-norm" data-module="layer-norm">Layer Norm &amp; Residuals</a></li>
+                    <li><a href="#transformer-encoder" data-module="transformer-encoder">Transformer Encoder</a></li>
+                    <li><a href="#transformer-decoder" data-module="transformer-decoder">Transformer Decoder</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <h3>深度学习基础</h3>
+                <ul>
+                    <li><a href="#forward-backward" data-module="forward-backward">前向/反向传播</a></li>
+                    <li><a href="#activations" data-module="activations">激活函数对比</a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <h3>强化学习</h3>
+                <ul>
+                    <li><a href="#rl-mdp" data-module="rl-mdp">MDP 状态图</a></li>
+                    <li><a href="#q-learning" data-module="q-learning">Q-Learning</a></li>
+                    <li><a href="#policy-gradient" data-module="policy-gradient">Policy Gradient</a></li>
+                    <li><a href="#dqn" data-module="dqn">DQN</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <main id="main-content" class="main-content">
+        <div id="home-view" class="home-view">
+            <header class="hero">
+                <h1>深度学习/强化学习可视化</h1>
+                <p>交互式动画展示 Transformer、神经网络、强化学习算法的内部机制</p>
+            </header>
+
+            <!-- 学习路径 -->
+            <section class="learning-paths" aria-labelledby="paths-heading">
+                <header class="section-head">
+                    <h2 id="paths-heading">🧭 学习路径</h2>
+                    <p class="section-sub">按顺序学习可获得最连贯的理解。点击任一步骤直接进入对应模块。</p>
+                </header>
+                <div class="path-grid">
+                    <article class="path-card" data-path="transformer">
+                        <h3><span class="path-dot" style="background: var(--q-color);"></span>Transformer 入门路径</h3>
+                        <p class="path-desc">从注意力机制到完整 Encoder/Decoder 架构。</p>
+                        <ol class="path-steps">
+                            <li><a href="#attention" data-module="attention">Self-Attention</a></li>
+                            <li><a href="#multi-head-attention" data-module="multi-head-attention">Multi-Head Attention</a></li>
+                            <li><a href="#positional-encoding" data-module="positional-encoding">Positional Encoding</a></li>
+                            <li><a href="#ffn" data-module="ffn">Feed-Forward Network</a></li>
+                            <li><a href="#layer-norm" data-module="layer-norm">Layer Norm &amp; Residuals</a></li>
+                            <li><a href="#transformer-encoder" data-module="transformer-encoder">Transformer Encoder</a></li>
+                            <li><a href="#transformer-decoder" data-module="transformer-decoder">Transformer Decoder</a></li>
+                        </ol>
+                    </article>
+
+                    <article class="path-card" data-path="neural">
+                        <h3><span class="path-dot" style="background: var(--ffn-color);"></span>神经网络基础路径</h3>
+                        <p class="path-desc">先建立激活函数直觉，再进入前向/反向传播。</p>
+                        <ol class="path-steps">
+                            <li><a href="#activations" data-module="activations">激活函数对比</a></li>
+                            <li><a href="#forward-backward" data-module="forward-backward">前向/反向传播</a></li>
+                        </ol>
+                    </article>
+
+                    <article class="path-card" data-path="rl">
+                        <h3><span class="path-dot" style="background: var(--v-color);"></span>强化学习基础路径</h3>
+                        <p class="path-desc">从 MDP 框架入门，走到值函数与策略梯度方法。</p>
+                        <ol class="path-steps">
+                            <li><a href="#rl-mdp" data-module="rl-mdp">MDP 状态图</a></li>
+                            <li><a href="#q-learning" data-module="q-learning">Q-Learning</a></li>
+                            <li><a href="#policy-gradient" data-module="policy-gradient">Policy Gradient</a></li>
+                            <li><a href="#dqn" data-module="dqn">DQN</a></li>
+                        </ol>
+                    </article>
+                </div>
+
+                <aside class="difficulty-legend" aria-label="难度说明">
+                    <span class="legend-title">难度说明：</span>
+                    <span class="legend-item"><span class="difficulty-badge easy">基础</span> 概念入门，无需前置</span>
+                    <span class="legend-item"><span class="difficulty-badge medium">中等</span> 需要基础概念</span>
+                    <span class="legend-item"><span class="difficulty-badge hard">核心</span> 算法核心，建议有完整背景</span>
+                </aside>
+            </section>
+
+            <!-- 筛选与搜索 -->
+            <section class="home-filters" aria-label="模块筛选">
+                <div class="filter-search">
+                    <input type="search" id="module-search" class="search-input"
+                           placeholder="搜索模块名、关键词、标签..." aria-label="搜索模块">
+                    <button type="button" id="clear-filters" class="clear-filters">清除筛选</button>
+                </div>
+                <div class="filter-row">
+                    <div class="filter-group" role="group" aria-label="按分类筛选">
+                        <span class="filter-label">分类</span>
+                        <button type="button" class="filter-chip active" data-filter-cat="all">全部</button>
+                        <button type="button" class="filter-chip" data-filter-cat="transformer">Transformer</button>
+                        <button type="button" class="filter-chip" data-filter-cat="neural">神经网络</button>
+                        <button type="button" class="filter-chip" data-filter-cat="rl">强化学习</button>
+                    </div>
+                    <div class="filter-group" role="group" aria-label="按难度筛选">
+                        <span class="filter-label">难度</span>
+                        <button type="button" class="filter-chip active" data-filter-diff="all">全部</button>
+                        <button type="button" class="filter-chip" data-filter-diff="easy">基础</button>
+                        <button type="button" class="filter-chip" data-filter-diff="medium">中等</button>
+                        <button type="button" class="filter-chip" data-filter-diff="hard">核心</button>
+                    </div>
+                </div>
+                <div class="filter-status" id="filter-status" aria-live="polite"></div>
+            </section>
+
+            <!-- Transformer 系列 -->
+            <section class="module-section" data-category="transformer">
+                <header class="section-head">
+                    <h2><span class="section-dot" style="background: var(--q-color);"></span>Transformer 系列 <span class="section-count">7 个模块</span></h2>
+                    <p class="section-sub">注意力机制、位置编码、归一化、完整 Encoder/Decoder。建议按上面的入门路径顺序学习。</p>
+                </header>
+                <div class="modules-grid">
+                <div class="module-card" data-module="attention" data-category="transformer" data-difficulty="hard">
+                    <div class="card-header">
+                        <h3>Self-Attention</h3>
+                        <span class="difficulty-badge hard">核心</span>
+                    </div>
+                    <p>Q/K/V 生成 → Score 计算 → Softmax → 加权求和，完整展示注意力机制的矩阵运算过程</p>
+                    <div class="card-footer">
+                        <span class="tag">Transformer</span>
+                        <span class="tag">矩阵运算</span>
+                    </div>
+                </div>
+
+                <div class="module-card" data-module="multi-head-attention" data-category="transformer" data-difficulty="hard">
+                    <div class="card-header">
+                        <h3>Multi-Head Attention</h3>
+                        <span class="difficulty-badge hard">核心</span>
+                    </div>
+                    <p>多头并行计算 + Concat + 线性投影，展示如何从不同子空间捕获信息</p>
+                    <div class="card-footer">
+                        <span class="tag">Transformer</span>
+                        <span class="tag">并行计算</span>
+                    </div>
+                </div>
+
+                <div class="module-card" data-module="positional-encoding" data-category="transformer" data-difficulty="medium">
+                    <div class="card-header">
+                        <h3>Positional Encoding</h3>
+                        <span class="difficulty-badge medium">中等</span>
+                    </div>
+                    <p>sin/cos 位置编码公式 + 热力图可视化，理解位置信息如何注入序列</p>
+                    <div class="card-footer">
+                        <span class="tag">Transformer</span>
+                        <span class="tag">位置编码</span>
+                    </div>
+                </div>
+
+                <div class="module-card" data-module="ffn" data-category="transformer" data-difficulty="easy">
+                    <div class="card-header">
+                        <h3>Feed-Forward Network</h3>
+                        <span class="difficulty-badge easy">基础</span>
+                    </div>
+                    <p>两层全连接 + ReLU 激活，展示 Transformer 中的 Position-wise FFN 结构</p>
+                    <div class="card-footer">
+                        <span class="tag">Transformer</span>
+                        <span class="tag">神经网络</span>
+                    </div>
+                </div>
+
+                <div class="module-card" data-module="layer-norm" data-category="transformer" data-difficulty="medium">
+                    <div class="card-header">
+                        <h3>Layer Norm &amp; Residuals</h3>
+                        <span class="difficulty-badge medium">中等</span>
+                    </div>
+                    <p>层归一化 + 残差连接，展示训练稳定性的关键技术</p>
+                    <div class="card-footer">
+                        <span class="tag">Transformer</span>
+                        <span class="tag">归一化</span>
+                    </div>
+                </div>
+
+                <div class="module-card" data-module="transformer-encoder" data-category="transformer" data-difficulty="hard">
+                    <div class="card-header">
+                        <h3>Transformer Encoder</h3>
+                        <span class="difficulty-badge hard">核心</span>
+                    </div>
+                    <p>完整 Encoder Block 数据流: MHA → Add&amp;Norm → FFN → Add&amp;Norm</p>
+                    <div class="card-footer">
+                        <span class="tag">Transformer</span>
+                        <span class="tag">架构</span>
+                    </div>
+                </div>
+
+                <div class="module-card" data-module="transformer-decoder" data-category="transformer" data-difficulty="hard">
+                    <div class="card-header">
+                        <h3>Transformer Decoder</h3>
+                        <span class="difficulty-badge hard">核心</span>
+                    </div>
+                    <p>Masked MHA → Cross-Attention → FFN，理解 seq2seq 自回归解码过程</p>
+                    <div class="card-footer">
+                        <span class="tag">Transformer</span>
+                        <span class="tag">架构</span>
+                    </div>
+                </div>
+                </div><!-- /.modules-grid transformer -->
+            </section>
+
+            <!-- 神经网络基础 -->
+            <section class="module-section" data-category="neural">
+                <header class="section-head">
+                    <h2><span class="section-dot" style="background: var(--ffn-color);"></span>神经网络基础 <span class="section-count">2 个模块</span></h2>
+                    <p class="section-sub">理解训练底层机制：激活函数与反向传播。</p>
+                </header>
+                <div class="modules-grid">
+                <div class="module-card" data-module="forward-backward" data-category="neural" data-difficulty="medium">
+                    <div class="card-header">
+                        <h3>前向/反向传播</h3>
+                        <span class="difficulty-badge medium">中等</span>
+                    </div>
+                    <p>神经网络训练的核心: 前向计算 + 梯度反向传播 + 链式法则的逐步演示</p>
+                    <div class="card-footer">
+                        <span class="tag">神经网络</span>
+                        <span class="tag">梯度</span>
+                    </div>
+                </div>
+
+                <div class="module-card" data-module="activations" data-category="neural" data-difficulty="easy">
+                    <div class="card-header">
+                        <h3>激活函数对比</h3>
+                        <span class="difficulty-badge easy">基础</span>
+                    </div>
+                    <p>ReLU、Sigmoid、Tanh 的函数曲线、梯度特性对比和典型应用场景</p>
+                    <div class="card-footer">
+                        <span class="tag">神经网络</span>
+                        <span class="tag">激活函数</span>
+                    </div>
+                </div>
+                </div><!-- /.modules-grid neural -->
+            </section>
+
+            <!-- 强化学习 -->
+            <section class="module-section" data-category="rl">
+                <header class="section-head">
+                    <h2><span class="section-dot" style="background: var(--v-color);"></span>强化学习 <span class="section-count">4 个模块</span></h2>
+                    <p class="section-sub">从 MDP 框架到值函数与策略梯度方法。</p>
+                </header>
+                <div class="modules-grid">
+                <div class="module-card" data-module="rl-mdp" data-category="rl" data-difficulty="medium">
+                    <div class="card-header">
+                        <h3>MDP 状态图</h3>
+                        <span class="difficulty-badge medium">中等</span>
+                    </div>
+                    <p>马尔可夫决策过程: 状态、动作、奖励、转移概率的可视化</p>
+                    <div class="card-footer">
+                        <span class="tag">强化学习</span>
+                        <span class="tag">MDP</span>
+                    </div>
+                </div>
+
+                <div class="module-card" data-module="q-learning" data-category="rl" data-difficulty="hard">
+                    <div class="card-header">
+                        <h3>Q-Learning</h3>
+                        <span class="difficulty-badge hard">核心</span>
+                    </div>
+                    <p>Q-table 更新过程: 探索、利用、Bellman 迭代的动态演示</p>
+                    <div class="card-footer">
+                        <span class="tag">强化学习</span>
+                        <span class="tag">Q-Learning</span>
+                    </div>
+                </div>
+
+                <div class="module-card" data-module="policy-gradient" data-category="rl" data-difficulty="hard">
+                    <div class="card-header">
+                        <h3>Policy Gradient</h3>
+                        <span class="difficulty-badge hard">核心</span>
+                    </div>
+                    <p>REINFORCE + 策略网络 + 轨迹采样，展示策略梯度的完整更新过程</p>
+                    <div class="card-footer">
+                        <span class="tag">强化学习</span>
+                        <span class="tag">策略梯度</span>
+                    </div>
+                </div>
+
+                <div class="module-card" data-module="dqn" data-category="rl" data-difficulty="hard">
+                    <div class="card-header">
+                        <h3>DQN</h3>
+                        <span class="difficulty-badge hard">核心</span>
+                    </div>
+                    <p>深度 Q 网络: 经验回放 + 目标网络 + Bellman 方程</p>
+                    <div class="card-footer">
+                        <span class="tag">强化学习</span>
+                        <span class="tag">DQN</span>
+                    </div>
+                </div>
+            </div><!-- /.modules-grid rl -->
+            </section>
+
+            <!-- 搜索/筛选命中 0 条时的空态 -->
+            <div id="empty-state" class="empty-state" hidden>
+                <p>没有模块匹配当前筛选条件。</p>
+                <button type="button" id="empty-clear" class="clear-filters">清除筛选条件</button>
+            </div>
+        </div>
+
+        <!-- 模块视图容器 -->
+        <div id="module-view" class="module-view" style="display: none;">
+            <div class="module-header">
+                <button id="back-btn" class="back-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                    返回
+                </button>
+                <h2 id="module-title"></h2>
+            </div>
+            <div id="module-content" class="module-content"></div>
+        </div>
+    </main>
+
+    <!-- 底部控制栏 -->
+    <div id="controls" class="controls" style="display: none;">
+        <div class="controls-group">
+            <button id="play-btn" class="control-btn primary" aria-label="播放">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5v14l11-7z"/>
+                </svg>
+                播放
+            </button>
+            <button id="pause-btn" class="control-btn" aria-label="暂停" style="display: none;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M6 4h4v16H6zM14 4h4v16h-4z"/>
+                </svg>
+                暂停
+            </button>
+            <button id="step-btn" class="control-btn" aria-label="单步">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 4l10 8-10 8V4zM19 5v14"/>
+                </svg>
+                单步
+            </button>
+            <button id="reset-btn" class="control-btn" aria-label="重置">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                    <path d="M21 3v5h-5"/>
+                </svg>
+                重置
+            </button>
+        </div>
+
+        <div class="controls-group">
+            <label for="speed-select">速度:</label>
+            <select id="speed-select" class="speed-select">
+                <option value="0.5">0.5x</option>
+                <option value="1" selected>1x</option>
+                <option value="1.5">1.5x</option>
+                <option value="2">2x</option>
+            </select>
+        </div>
+
+        <div class="controls-group">
+            <span id="step-indicator" class="step-indicator">步骤: 0/0</span>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/utils/math.js"></script>
+    <script src="js/utils/format.js"></script>
+    <script src="js/utils/color.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

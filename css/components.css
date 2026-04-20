@@ -1,0 +1,74 @@
+/**
+ * components.css — 共享组件默认样式
+ *
+ * 目标：统一模块内高频重复的 UI 原子
+ *   - .section / .section-title   分区容器 + 标题
+ *   - .formula-box                 公式盒（等宽字体 + 深色边框）
+ *   - .ctrl-btn                    通用次级按钮（控制栏之外的点击项，如 mask 切换）
+ *   - .kbd                         键盘按键徽章
+ *
+ * 使用原则：
+ *   - 新模块写 HTML 时直接使用这些类，不要再在 <style> 字符串里重复定义同名类
+ *   - 现有模块的内嵌 <style> 里仍有同名类（作用域带模块前缀如 .attn-viz .section），
+ *     属于历史包袱，CSS 优先级更高会覆盖本文件；不强制本轮迁移
+ *   - 模块仍需要定制时，应覆盖更细的 class（如 .section--dense）而不是再抢 .section
+ */
+
+/* ---------- Section / Panel ---------- */
+.section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.section-title {
+    font-weight: 700;
+    color: var(--text);
+    font-size: 0.95rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+/* ---------- Formula box ---------- */
+.formula-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: #a5f3fc;
+    margin: 6px 0;
+    overflow-x: auto;
+}
+
+/* ---------- Generic control button (within modules, e.g. mask toggle) ---------- */
+.ctrl-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 6px;
+    font-size: 0.85rem;
+    font-family: inherit;
+    transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+.ctrl-btn:hover  { background: var(--surface-hover); border-color: var(--primary); }
+.ctrl-btn.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+/* ---------- Keyboard hint ---------- */
+.kbd {
+    display: inline-block;
+    min-width: 18px;
+    padding: 1px 6px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--surface-hover);
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-align: center;
+}
